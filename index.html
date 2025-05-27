@@ -199,8 +199,11 @@
     const form = document.getElementById('taskForm');
     const tableBody = document.querySelector('#tasksTable tbody');
 
+    // Use localStorage key for tasks
+    const STORAGE_KEY = 'tasks_management_system_tasks';
+
     // Load tasks from localStorage or initialize with default tasks
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [
+    let tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
       {
         taskName: "Dispatch",
         remarks: "Asss",
@@ -276,7 +279,7 @@
     }
 
     function saveTasks() {
-      localStorage.setItem('tasks', JSON.stringify(tasks));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
     }
 
     form.addEventListener('submit', (e) => {
@@ -345,6 +348,14 @@
       saveTasks();
       renderTasks();
     }
+
+    // Listen for storage changes to sync tasks across tabs/windows
+    window.addEventListener('storage', (event) => {
+      if (event.key === STORAGE_KEY) {
+        tasks = JSON.parse(event.newValue) || [];
+        renderTasks();
+      }
+    });
 
     // Initial render
     renderTasks();
