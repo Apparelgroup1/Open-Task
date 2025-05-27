@@ -1,0 +1,258 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tasks Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <style>
+    /* Custom scrollbar removal for table container on small screens */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-indigo-100 via-indigo-50 to-indigo-200 min-h-screen flex items-center justify-center p-4">
+  <main
+    class="bg-white rounded-xl shadow-lg w-full max-w-7xl p-8 md:p-12 font-sans"
+  >
+    <h1 class="text-indigo-700 text-2xl font-semibold mb-8">
+      Tasks Management System
+    </h1>
+
+    <form
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 max-w-full"
+      autocomplete="off"
+      novalidate
+    >
+      <div class="flex flex-col">
+        <label
+          for="taskName"
+          class="text-indigo-700 text-sm font-medium mb-1"
+          >Task Name <span class="text-indigo-700">*</span></label
+        >
+        <input
+          id="taskName"
+          name="taskName"
+          type="text"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          placeholder=""
+          required
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label
+          for="remarks"
+          class="text-indigo-700 text-sm font-medium mb-1"
+          >Remarks</label
+        >
+        <textarea
+          id="remarks"
+          name="remarks"
+          rows="1"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          placeholder="Additional remarks"
+        ></textarea>
+      </div>
+
+      <div class="flex flex-col">
+        <label
+          for="status"
+          class="text-indigo-700 text-sm font-medium mb-1"
+          >Status <span class="text-indigo-700">*</span></label
+        >
+        <select
+          id="status"
+          name="status"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          required
+        >
+          <option>Open</option>
+          <option>Closed</option>
+        </select>
+      </div>
+
+      <div class="flex flex-col">
+        <label
+          for="openDate"
+          class="text-indigo-700 text-sm font-medium mb-1"
+          >Open Date <span class="text-indigo-700">*</span></label
+        >
+        <input
+          id="openDate"
+          name="openDate"
+          type="text"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          value="27/05/2025"
+          required
+          readonly
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label
+          for="closedDate"
+          class="text-indigo-700 text-sm font-medium mb-1"
+          >Closed Date</label
+        >
+        <input
+          id="closedDate"
+          name="closedDate"
+          type="text"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          placeholder="dd / mm / yyyy"
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label
+          for="taskGivenBy"
+          class="text-indigo-700 text-sm font-medium mb-1"
+          >Task Given By</label
+        >
+        <input
+          id="taskGivenBy"
+          name="taskGivenBy"
+          type="text"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          placeholder=""
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label
+          for="responsibility"
+          class="text-indigo-700 text-sm font-medium mb-1"
+          >Responsibility</label
+        >
+        <input
+          id="responsibility"
+          name="responsibility"
+          type="text"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          placeholder=""
+        />
+      </div>
+
+      <div class="flex flex-col">
+        <label
+          for="priority"
+          class="text-indigo-700 text-sm font-medium mb-1"
+          >Priority <span class="text-indigo-700">*</span></label
+        >
+        <select
+          id="priority"
+          name="priority"
+          class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          required
+        >
+          <option>Medium</option>
+          <option>Low</option>
+          <option>High</option>
+        </select>
+      </div>
+
+      <div class="col-span-full mt-2">
+        <button
+          type="submit"
+          class="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-md hover:bg-indigo-700 transition w-full sm:w-auto"
+        >
+          Add Task
+        </button>
+      </div>
+    </form>
+
+    <section
+      class="mt-10 overflow-x-auto rounded-md shadow-sm border border-gray-100"
+      aria-label="Tasks Table"
+    >
+      <table class="min-w-full text-left text-sm text-indigo-700">
+        <thead class="bg-indigo-100">
+          <tr>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Sl No.</th>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Task Name</th>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Remarks</th>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Status</th>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Open Date</th>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Closed Date</th>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Task Given By</th>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Responsibility</th>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Priority</th>
+            <th class="px-4 py-3 whitespace-nowrap font-semibold">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="bg-white">
+            <td class="px-4 py-4 whitespace-nowrap">1</td>
+            <td class="px-4 py-4 whitespace-nowrap">Dispatch</td>
+            <td class="px-4 py-4 whitespace-nowrap">Asss</td>
+            <td class="px-4 py-4 whitespace-nowrap">
+              <span class="text-indigo-600 cursor-pointer">Open</span>
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap">
+              <time datetime="2025-05-21">May 21, 2025</time>
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap"> </td>
+            <td class="px-4 py-4 whitespace-nowrap">Nur Ali</td>
+            <td class="px-4 py-4 whitespace-nowrap">Nur Ali</td>
+            <td class="px-4 py-4 whitespace-nowrap">Low</td>
+            <td class="px-4 py-4 whitespace-nowrap space-x-3">
+              <button
+                type="button"
+                class="text-indigo-600 font-semibold border border-indigo-600 rounded-full px-6 py-1 hover:bg-indigo-50 transition"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="text-red-500 font-semibold border border-red-400 rounded-full px-6 py-1 hover:bg-red-50 transition"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+          <tr class="bg-white">
+            <td class="px-4 py-4 whitespace-nowrap">2</td>
+            <td class="px-4 py-4 whitespace-nowrap">S</td>
+            <td class="px-4 py-4 whitespace-nowrap">S</td>
+            <td class="px-4 py-4 whitespace-nowrap">
+              <span class="text-indigo-600 cursor-pointer">Open</span>
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap">
+              <time datetime="2025-05-21">May 21, 2025</time>
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap"> </td>
+            <td class="px-4 py-4 whitespace-nowrap">Vasanthan</td>
+            <td class="px-4 py-4 whitespace-nowrap">Nur</td>
+            <td class="px-4 py-4 whitespace-nowrap text-red-600 font-semibold">
+              High
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap space-x-3">
+              <button
+                type="button"
+                class="text-indigo-600 font-semibold border border-indigo-600 rounded-full px-6 py-1 hover:bg-indigo-50 transition"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="text-red-500 font-semibold border border-red-400 rounded-full px-6 py-1 hover:bg-red-50 transition"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
