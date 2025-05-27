@@ -190,66 +190,6 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
-          <tr class="bg-white">
-            <td class="px-4 py-4 whitespace-nowrap">1</td>
-            <td class="px-4 py-4 whitespace-nowrap">Dispatch</td>
-            <td class="px-4 py-4 whitespace-nowrap">Asss</td>
-            <td class="px-4 py-4 whitespace-nowrap">
-              <span class="text-indigo-600 cursor-pointer">Open</span>
-            </td>
-            <td class="px-4 py-4 whitespace-nowrap">
-              <time datetime="2025-05-21">May 21, 2025</time>
-            </td>
-            <td class="px-4 py-4 whitespace-nowrap"> </td>
-            <td class="px-4 py-4 whitespace-nowrap">Nur Ali</td>
-            <td class="px-4 py-4 whitespace-nowrap">Nur Ali</td>
-            <td class="px-4 py-4 whitespace-nowrap">Low</td>
-            <td class="px-4 py-4 whitespace-nowrap space-x-3">
-              <button
-                type="button"
-                class="text-indigo-600 font-semibold border border-indigo-600 rounded-full px-6 py-1 hover:bg-indigo-50 transition"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                class="text-red-500 font-semibold border border-red-400 rounded-full px-6 py-1 hover:bg-red-50 transition"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-          <tr class="bg-white">
-            <td class="px-4 py-4 whitespace-nowrap">2</td>
-            <td class="px-4 py-4 whitespace-nowrap">S</td>
-            <td class="px-4 py-4 whitespace-nowrap">S</td>
-            <td class="px-4 py-4 whitespace-nowrap">
-              <span class="text-indigo-600 cursor-pointer">Open</span>
-            </td>
-            <td class="px-4 py-4 whitespace-nowrap">
-              <time datetime="2025-05-21">May 21, 2025</time>
-            </td>
-            <td class="px-4 py-4 whitespace-nowrap"> </td>
-            <td class="px-4 py-4 whitespace-nowrap">Vasanthan</td>
-            <td class="px-4 py-4 whitespace-nowrap">Nur</td>
-            <td class="px-4 py-4 whitespace-nowrap text-red-600 font-semibold">
-              High
-            </td>
-            <td class="px-4 py-4 whitespace-nowrap space-x-3">
-              <button
-                type="button"
-                class="text-indigo-600 font-semibold border border-indigo-600 rounded-full px-6 py-1 hover:bg-indigo-50 transition"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                class="text-red-500 font-semibold border border-red-400 rounded-full px-6 py-1 hover:bg-red-50 transition"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
         </tbody>
       </table>
     </section>
@@ -258,6 +198,86 @@
   <script>
     const form = document.getElementById('taskForm');
     const tableBody = document.querySelector('#tasksTable tbody');
+
+    // Load tasks from localStorage or initialize with default tasks
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [
+      {
+        taskName: "Dispatch",
+        remarks: "Asss",
+        status: "Open",
+        openDate: "2025-05-21",
+        closedDate: "",
+        taskGivenBy: "Nur Ali",
+        responsibility: "Nur Ali",
+        priority: "Low"
+      },
+      {
+        taskName: "S",
+        remarks: "S",
+        status: "Open",
+        openDate: "2025-05-21",
+        closedDate: "",
+        taskGivenBy: "Vasanthan",
+        responsibility: "Nur",
+        priority: "High"
+      }
+    ];
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const dateObj = new Date(dateStr);
+      if (isNaN(dateObj)) return '';
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return dateObj.toLocaleDateString('en-US', options);
+    }
+
+    function renderTasks() {
+      tableBody.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const tr = document.createElement('tr');
+        tr.className = 'bg-white';
+        tr.innerHTML = `
+          <td class="px-4 py-4 whitespace-nowrap">${index + 1}</td>
+          <td class="px-4 py-4 whitespace-nowrap">${task.taskName}</td>
+          <td class="px-4 py-4 whitespace-nowrap">${task.remarks}</td>
+          <td class="px-4 py-4 whitespace-nowrap">
+            <span class="text-indigo-600 cursor-pointer">${task.status}</span>
+          </td>
+          <td class="px-4 py-4 whitespace-nowrap">
+            <time datetime="${task.openDate}">${formatDate(task.openDate)}</time>
+          </td>
+          <td class="px-4 py-4 whitespace-nowrap">${formatDate(task.closedDate)}</td>
+          <td class="px-4 py-4 whitespace-nowrap">${task.taskGivenBy}</td>
+          <td class="px-4 py-4 whitespace-nowrap">${task.responsibility}</td>
+          <td class="px-4 py-4 whitespace-nowrap ${
+            task.priority.toLowerCase() === 'high' ? 'text-red-600 font-semibold' : ''
+          }">${task.priority}</td>
+          <td class="px-4 py-4 whitespace-nowrap space-x-3">
+            <button
+              type="button"
+              class="text-indigo-600 font-semibold border border-indigo-600 rounded-full px-6 py-1 hover:bg-indigo-50 transition"
+              data-index="${index}"
+              onclick="editTask(${index})"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              class="text-red-500 font-semibold border border-red-400 rounded-full px-6 py-1 hover:bg-red-50 transition"
+              data-index="${index}"
+              onclick="deleteTask(${index})"
+            >
+              Delete
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function saveTasks() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -279,63 +299,55 @@
       const taskGivenBy = form.taskGivenBy.value.trim();
       const responsibility = form.responsibility.value.trim();
 
-      // Format dates for display
-      function formatDate(dateStr) {
-        if (!dateStr) return '';
-        const dateObj = new Date(dateStr);
-        if (isNaN(dateObj)) return '';
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return dateObj.toLocaleDateString('en-US', options);
-      }
+      // Add new task to tasks array
+      tasks.push({
+        taskName,
+        remarks,
+        status,
+        openDate,
+        closedDate,
+        taskGivenBy,
+        responsibility,
+        priority
+      });
 
-      // Calculate new Sl No.
-      const newSlNo = tableBody.children.length + 1;
-
-      // Create new row
-      const tr = document.createElement('tr');
-      tr.className = 'bg-white';
-
-      tr.innerHTML = `
-        <td class="px-4 py-4 whitespace-nowrap">${newSlNo}</td>
-        <td class="px-4 py-4 whitespace-nowrap">${taskName}</td>
-        <td class="px-4 py-4 whitespace-nowrap">${remarks}</td>
-        <td class="px-4 py-4 whitespace-nowrap">
-          <span class="text-indigo-600 cursor-pointer">${status}</span>
-        </td>
-        <td class="px-4 py-4 whitespace-nowrap">
-          <time datetime="${openDate}">${formatDate(openDate)}</time>
-        </td>
-        <td class="px-4 py-4 whitespace-nowrap">${formatDate(closedDate)}</td>
-        <td class="px-4 py-4 whitespace-nowrap">${taskGivenBy}</td>
-        <td class="px-4 py-4 whitespace-nowrap">${responsibility}</td>
-        <td class="px-4 py-4 whitespace-nowrap ${
-          priority.toLowerCase() === 'high' ? 'text-red-600 font-semibold' : ''
-        }">${priority}</td>
-        <td class="px-4 py-4 whitespace-nowrap space-x-3">
-          <button
-            type="button"
-            class="text-indigo-600 font-semibold border border-indigo-600 rounded-full px-6 py-1 hover:bg-indigo-50 transition"
-          >
-            Edit
-          </button>
-          <button
-            type="button"
-            class="text-red-500 font-semibold border border-red-400 rounded-full px-6 py-1 hover:bg-red-50 transition"
-          >
-            Delete
-          </button>
-        </td>
-      `;
-
-      tableBody.appendChild(tr);
+      saveTasks();
+      renderTasks();
 
       // Reset form
       form.reset();
-      // Reset openDate to default value after reset
       form.openDate.value = '2025-05-27';
       form.priority.value = 'Medium';
       form.status.value = 'Open';
     });
+
+    function deleteTask(index) {
+      if (confirm('Are you sure you want to delete this task?')) {
+        tasks.splice(index, 1);
+        saveTasks();
+        renderTasks();
+      }
+    }
+
+    function editTask(index) {
+      const task = tasks[index];
+      form.taskName.value = task.taskName;
+      form.remarks.value = task.remarks;
+      form.status.value = task.status;
+      form.openDate.value = task.openDate;
+      form.closedDate.value = task.closedDate;
+      form.taskGivenBy.value = task.taskGivenBy;
+      form.responsibility.value = task.responsibility;
+      form.priority.value = task.priority;
+
+      // Remove the old task on edit to avoid duplicates on submit
+      tasks.splice(index, 1);
+      saveTasks();
+      renderTasks();
+    }
+
+    // Initial render
+    renderTasks();
   </script>
 </body>
 </html>
